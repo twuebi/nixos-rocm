@@ -7,11 +7,12 @@
 buildPythonPackage rec {
   version = "1.0.0";
   pname = "pytorch";
+
   src = fetchFromGitHub {
     owner = "ROCmSoftwarePlatform";
     repo = "pytorch";
-    rev = "0827395419a00f1ac815977671632b79723c0a45";
-    sha256 = "00rbiqkizqpa8y1ja8rzbrqzm9qjcxbgq0m3ccg4km1hz8js5ra6";
+    rev = "57c9b1cefc8fed09ffb251040b9db2481ec34f81";
+    sha256 = "1z7lnjhx4i484x03wdd6kr05pnn37k0m392bhcw9378cn3c1c4h7";
     fetchSubmodules = true;
   };
 
@@ -57,13 +58,13 @@ buildPythonPackage rec {
   cmakeFlags = [
     "-DUSE_CUDA=OFF"
     "-DATEN_NO_TEST=ON"
+    "-DGLIBCXX_USE_CXX11_ABI=ON"
     "-DUSE_GLOO=OFF"
     "-DUSE_MKLDNN=OFF"
     "-DUSE_OPENMP=ON"
     "-DUSE_OPENCV=ON"
     "-DUSE_DISTRIBUTED=OFF"
     "-DBUILD_TEST=ON"
-    "-DUSE_NCCL=ON"
   ];
 
   doCheck = false;
@@ -77,7 +78,7 @@ buildPythonPackage rec {
     ./link-mcwamp.patch
     ./add-jit-srcs.patch
     ./hip-cmake.patch
-    ./throw_nccl_error_api.patch
+    #./throw_nccl_error_api.patch
   ];
 
   postConfigure = ''

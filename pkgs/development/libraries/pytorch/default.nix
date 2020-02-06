@@ -7,11 +7,12 @@
 buildPythonPackage rec {
   version = "1.0.0";
   pname = "pytorch";
+
   src = fetchFromGitHub {
     owner = "ROCmSoftwarePlatform";
     repo = "pytorch";
-    rev = "0827395419a00f1ac815977671632b79723c0a45";
-    sha256 = "00rbiqkizqpa8y1ja8rzbrqzm9qjcxbgq0m3ccg4km1hz8js5ra6";
+    rev = "f56c59ead66325572e61fab83c2710d9fc3aa64e";
+    sha256 = "0iay7zaqvj5in2j0wy2bhma86pbg2ivcn3gk00cyhfc914g2cwgg";
     fetchSubmodules = true;
   };
 
@@ -57,13 +58,13 @@ buildPythonPackage rec {
   cmakeFlags = [
     "-DUSE_CUDA=OFF"
     "-DATEN_NO_TEST=ON"
+    "-DGLIBCXX_USE_CXX11_ABI=ON"
     "-DUSE_GLOO=OFF"
     "-DUSE_MKLDNN=OFF"
     "-DUSE_OPENMP=ON"
     "-DUSE_OPENCV=ON"
     "-DUSE_DISTRIBUTED=OFF"
     "-DBUILD_TEST=ON"
-    "-DUSE_NCCL=ON"
   ];
 
   doCheck = false;
@@ -71,13 +72,12 @@ buildPythonPackage rec {
   patches = [
     ./no-hex-float-lit.patch
     ./protobuf-cmake-install.patch
-    ./hip-version-torch.patch
     ./torch-python-lib-dirs.patch
     ./setup-lib-dirs.patch
     ./link-mcwamp.patch
     ./add-jit-srcs.patch
     ./hip-cmake.patch
-    ./throw_nccl_error_api.patch
+    #./throw_nccl_error_api.patch
   ];
 
   postConfigure = ''

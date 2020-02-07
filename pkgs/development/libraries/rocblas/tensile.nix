@@ -1,4 +1,5 @@
-{ fetchFromGitHub, buildPythonPackage, pyyaml, pytest, lib, config, rocminfo, hcc, rocm-smi }:
+{ stdenv, fetchFromGitHub, buildPythonPackage, pyyaml, pytest, lib, config
+, rocminfo, hcc, rocm-smi }:
 buildPythonPackage rec {
   pname = "Tensile";
   # version = "2.10.0";
@@ -20,6 +21,8 @@ buildPythonPackage rec {
         -e 's|locateExe("/opt/rocm/bin", "rocm-smi")|locateExe("${rocm-smi}/bin", "rocm-smi")|' \
         -e 's|locateExe("/opt/rocm/bin", "extractkernel")|locateExe("${hcc}/bin", "extractkernel")|' \
         -i Tensile/Common.py
+  '' + lib.optionalString (stdenv.cc.isGNU && lib.versionAtLeast stdenv.cc.version "9.2") ''
+    sed 's|const Items empty;|const Items empty = {};|' -i Tensile/Source/lib/include/Tensile/EmbeddedData.hpp
   '';
 
   # We need patched source files in the output, so we can't symlink
